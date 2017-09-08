@@ -11,3 +11,9 @@
 
 # Create ubuntu16.json file include "provisioners" install Ruby & MongoDB (Commit Add Packer template ubuntu16.json + install_ruby.sh&install_mongodb.sh):
 
+# 1.parameterize the created template ubuntu16.json using custom variables (Commit Parameterize the created template ubuntu16.json):
+#   machine_type
+#   source_image (required)
+#   project_id (required)
+# 
+# Use packer build -var-file=variables.json ubuntu16.json are packer build -var 'project_id=<My project_id>' -var 'source_image=ubuntu-1604-xenial-v20170815a' ubuntu16.json
