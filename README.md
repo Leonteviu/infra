@@ -17,3 +17,8 @@
 #   project_id (required)
 # 
 # Use packer build -var-file=variables.json ubuntu16.json are packer build -var 'project_id=<My project_id>' -var 'source_image=ubuntu-1604-xenial-v20170815a' ubuntu16.json
+# 2. Add options to ubuntu16.json (Commit Add new options to ubintu16.json)
+#    disk_size,
+#    disk_type, 
+#    network, 
+#    image_description
