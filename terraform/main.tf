@@ -10,6 +10,12 @@ tags = ["reddit-app"]
 metadata {
 sshKeys = "appuser:${file("~/.ssh/appuser.pub")}"
 }
+connection {
+type = "ssh"
+user = "appuser"
+agent = false
+private_key = "${file("~/.ssh/appuser")}"
+}
 provisioner "file" {
 source = "files/puma.service"
 destination = "/tmp/puma.service"
