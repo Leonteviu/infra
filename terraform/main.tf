@@ -17,7 +17,8 @@ connection {
 type = "ssh"
 user = "appuser"
 agent = false
-private_key = "${file("~/.ssh/appuser")}"
+### private_key = "${file("~/.ssh/appuser")}"
+private_key = "${file(var.private_key)}"
 }
 provisioner "file" {
 source = "files/puma.service"
