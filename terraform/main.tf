@@ -1,6 +1,8 @@
 provider "google" {
-project = "infra-179710"
-region = "europe-west1"
+### project = "infra-179710"
+### region = "europe-west1"
+project = "${var.project}"
+region = "${var.region}"
 }
 resource "google_compute_instance" "app" {
 name = "reddit-app"
@@ -8,7 +10,8 @@ machine_type = "g1-small"
 zone = "europe-west1-b"
 tags = ["reddit-app"]
 metadata {
-sshKeys = "appuser:${file("~/.ssh/appuser.pub")}"
+### sshKeys = "appuser:${file("~/.ssh/appuser.pub")}"
+sshKeys = "appuser:${file(var.public_key_path)}"
 }
 connection {
 type = "ssh"
@@ -26,7 +29,8 @@ script = "files/deploy.sh"
 # BOOT DISK
 boot_disk {
 initialize_params {
-image = "reddit-base-1505214895"
+### image = "reddit-base-1505214895"
+image = "${var.disk_image}"
 }
 }
 # NETWORK INTERFACE
