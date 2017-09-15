@@ -44,3 +44,8 @@
 # 1. Определим еще одну пользовательскую переменную - приватный ключ (private_key) внесем соответствующие строки в main.tf, variables.tf и terraform.tfvars
 #
 # 2. Отформатировать конфигурационные файлы используя terraform fmt
+
+# Homework 9
+
+~/infra/packer/db.json - шаблон для сбора VM с установленной MongoDB
+~/infra/packer/app.json - шаблон для сбора VM с установленной Ruby

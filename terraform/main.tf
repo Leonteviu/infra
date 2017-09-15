@@ -49,9 +49,9 @@ resource "google_compute_instance" "app" {
     network = "default"
 
     # Use ephemeral IP to connect from Internet
-###    access_config {}
-access_config = {
-nat_ip = "${google_compute_address.app_ip.address}"
+    ###    access_config {}
+    access_config = {
+      nat_ip = "${google_compute_address.app_ip.address}"
     }
   }
 }
@@ -70,16 +70,18 @@ resource "google_compute_firewall" "firewall_puma" {
 }
 
 resource "google_compute_firewall" "firewall_ssh" {
-name = "default-allow-ssh"
-network = "default"
-description = "Allow SSH from all hosts"
-allow {
-protocol = "tcp"
-ports = ["22"]
-}
-source_ranges = ["0.0.0.0/0"]
+  name        = "default-allow-ssh"
+  network     = "default"
+  description = "Allow SSH from all hosts"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+  }
+
+  source_ranges = ["0.0.0.0/0"]
 }
 
 resource "google_compute_address" "app_ip" {
-name = "reddit-app-ip"
+  name = "reddit-app-ip"
 }
