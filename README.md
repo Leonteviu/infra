@@ -51,3 +51,4 @@
 ~/infra/packer/app.json - шаблон для сбора VM с установленной Ruby
 ~/infra/terraform/app.tf - содержит конфигурацию для VM с приложением
 ~/infra/terraform/db.tf - содержит конфигурацию для VM с БД
+~/infra/terraform/vpc.tf - содержит правило  firewall для SSH, которе применимо для всех инстансов нашей сети.
