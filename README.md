@@ -49,3 +49,5 @@
 
 ~/infra/packer/db.json - шаблон для сбора VM с установленной MongoDB
 ~/infra/packer/app.json - шаблон для сбора VM с установленной Ruby
+~/infra/terraform/app.tf - содержит конфигурацию для VM с приложением
+~/infra/terraform/db.tf - содержит конфигурацию для VM с БД
