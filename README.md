@@ -45,7 +45,9 @@
 #
 # 2. Отформатировать конфигурационные файлы используя terraform fmt
 
-# Homework 9
+# Homework 9 (в этой конфигурации из-за того, что опущена настройка revisioner, после старта сервера приложения, само прилоежние у нас не доступно!)
+
+## Создание двух VM (разбивка исходной конфигурации по файлам):
 
 ~/infra/packer/db.json - шаблон для сбора VM с установленной MongoDB
 ~/infra/packer/app.json - шаблон для сбора VM с установленной Ruby
@@ -59,3 +61,22 @@ $ packer inspect <путь_до_шаблона>
 Для начала определим требуемые переменные в файле variables.json.
 Создадим образ, выполнив команду:
 $ packer build -var-file variables.json app.json
+Для создания хостов используем команды:
+$ terraform plan
+$ terraform apply
+или
+$ terraform apply -auto-approve=false
+
+## Используем модули
+
+Используются директории (необходимо удалить или переименовать db.tf и app.tf в директории terraform):
+infra/terraform/modules/db/  # содержит модуль базы данных
+infra/terraform/modules/app/ # содержит модуль приложения
+infra/terraform/modules/vpc/ # содержит модуль настройки файрвола в рамках сети.
+*.tf_old файлы от разбивки исходной конфигурации по файлам (не используются)
+
+Используемые команды:
+$ terraform get      # для загрузки модулей
+$ tree .terraform    # убедились, что модули загрузились в .terraform
+$ terraform plan
+$ terraform apply
