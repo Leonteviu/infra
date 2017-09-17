@@ -49,42 +49,42 @@ Use packer build -var-file=variables.json ubuntu16.json are packer build -var 'p
 
 ## Создание двух VM (разбивка исходной конфигурации по файлам):
 
-~/infra/packer/db.json - шаблон для сбора VM с установленной MongoDB
-~/infra/packer/app.json - шаблон для сбора VM с установленной Ruby
-~/infra/terraform/app.tf - содержит конфигурацию для VM с приложением
-~/infra/terraform/db.tf - содержит конфигурацию для VM с БД
-~/infra/terraform/vpc.tf - содержит правило  firewall для SSH, которе применимо для всех инстансов нашей сети.
+- ~/infra/packer/db.json - шаблон для сбора VM с установленной MongoDB
+- ~/infra/packer/app.json - шаблон для сбора VM с установленной Ruby
+- ~/infra/terraform/app.tf - содержит конфигурацию для VM с приложением
+- ~/infra/terraform/db.tf - содержит конфигурацию для VM с БД
+- ~/infra/terraform/vpc.tf - содержит правило  firewall для SSH, которе применимо для всех инстансов нашей сети.
 
 Для того чтобы посмотреть переменные шаблона используем команду:
-$ packer inspect <путь_до_шаблона>
+- $ packer inspect <путь_до_шаблона>
 Соберем образ для приложения, используя шаблон app.json.
 Для начала определим требуемые переменные в файле variables.json.
 Создадим образ, выполнив команду:
-$ packer build -var-file variables.json app.json
+- $ packer build -var-file variables.json app.json
 Для создания хостов используем команды:
-$ terraform plan
-$ terraform apply
+- $ terraform plan
+- $ terraform apply
 или
-$ terraform apply -auto-approve=false
+- $ terraform apply -auto-approve=false
 
 ## Используем модули
 
 Используются директории (необходимо удалить или переименовать db.tf и app.tf в директории terraform):
-~/infra/terraform/modules/db/  # содержит модуль базы данных
-~/infra/terraform/modules/app/ # содержит модуль приложения
-~/infra/terraform/modules/vpc/ # содержит модуль настройки файрвола в рамках сети.
-.tf_old файлы от разбивки исходной конфигурации по файлам (не используются)
+- ~/infra/terraform/modules/db/  # содержит модуль базы данных
+- ~/infra/terraform/modules/app/ # содержит модуль приложения
+- ~/infra/terraform/modules/vpc/ # содержит модуль настройки файрвола в рамках сети.
+- .tf_old файлы от разбивки исходной конфигурации по файлам (не используются)
 
 Используемые команды:
-$ terraform get      # для загрузки модулей
-$ tree .terraform    # убедились, что модули загрузились в .terraform
-$ terraform plan
-$ terraform apply
+- $ terraform get      # для загрузки модулей
+- $ tree .terraform    # убедились, что модули загрузились в .terraform
+- $ terraform plan
+- $ terraform apply
 
 ## Создание инфраструктуры для двух окружений (stage и  prod)
 
-~/infra/terraform/prod  # окружение prod
-~/infra/terraform/stage # окружение stage
+- ~/infra/terraform/prod  # окружение prod
+- ~/infra/terraform/stage # окружение stage
 
 Каждая директория содержит файлы main.tf, variables.tf,
 outputs.tf, terraform.tfvars, скопированные из директории terraform. Заменены пути к модулям в main.tf на "../modules/xxx" вместо "modules/
@@ -92,7 +92,7 @@ xxx".
 
 Инфраструктура в обоих окружениях идентична. Однако в prod открыт SSH доступ только с моего  IP (myip.ru - можно узнать свой  IP), в stage открыт SSH доступ для всех IP.
 
-Для возможности работы в важдом окружении необходимо выполнить terraform init.
+- Для возможности работы в важдом окружении необходимо выполнить **terraform init**.
 
 Используемые команды:
 - $ terraform plan
