@@ -5,9 +5,9 @@ Add bash scripts to install Ruby, MomgoDB and deploy (Commit "Add .sh files")
 
 Add Startup.sh script contains install and deploy lines (Commit Add Statrup.sh & 'gcloud compute instances create')
 ## Use command:
-### gcloud compute instances create --boot-disk-size=10GB --image=ubuntu-1604-xenial-v20170815a --image-project=ubuntu-os-cloud --machine-type=g1-small --tags puma-server --restart-on-failure --zone=europe-west1-b --metadata-from-file=startup-script="Startup.sh" reddit-app
+gcloud compute instances create --boot-disk-size=10GB --image=ubuntu-1604-xenial-v20170815a --image-project=ubuntu-os-cloud --machine-type=g1-small --tags puma-server --restart-on-failure --zone=europe-west1-b --metadata-from-file=startup-script="Startup.sh" reddit-app
 ## To add firewall rule and open 9292 port use command:
-### gcloud compute firewall-rules create allow-to-puma-servers --target-tags=puma-server --allow tcp:9292
+gcloud compute firewall-rules create allow-to-puma-servers --target-tags=puma-server --allow tcp:9292
 
 # Home work 7 (BRANCH "base-os-parker")
 
@@ -44,7 +44,8 @@ Use packer build -var-file=variables.json ubuntu16.json are packer build -var 'p
 1. Определим еще одну пользовательскую переменную - приватный ключ (private_key) внесем соответствующие строки в main.tf, variables.tf и terraform.tfvars
 2. Отформатировать конфигурационные файлы используя terraform fmt
 
-# Homework 9 (BRANCH TERRAFORM-2  ) (в этой конфигурации из-за того, что опущена настройка revisioner, после старта сервера приложения, само прилоежние у нас не доступно!)
+# Homework 9 (BRANCH TERRAFORM-2)
+### (в этой конфигурации из-за того, что опущена настройка revisioner, после старта сервера приложения, само прилоежние у нас не доступно!)
 
 ## Создание двух VM (разбивка исходной конфигурации по файлам):
 
@@ -81,6 +82,7 @@ $ terraform plan
 $ terraform apply
 
 ## Создание инфраструктуры для двух окружений (stage и  prod)
+
 ~/infra/terraform/prod  # окружение prod
 ~/infra/terraform/stage # окружение stage
 
@@ -93,6 +95,6 @@ xxx".
 Для возможности работы в важдом окружении необходимо выполнить terraform init.
 
 Используемые команды:
-$ terraform plan
-$ terraform apply
-$ terraform destroy
+   $ terraform plan
+   $ terraform apply
+   $ terraform destroy
