@@ -55,6 +55,9 @@ Use packer build -var-file=variables.json ubuntu16.json are packer build -var 'p
 - ~/infra/terraform/db.tf - содержит конфигурацию для VM с БД
 - ~/infra/terraform/vpc.tf - содержит правило  firewall для SSH, которе применимо для всех инстансов нашей сети.
 
+- ~/infra/terraform/backend.tf - хранение нашего terraform.tfstate файла в облаке, для возможности совместного доступа к нему участниками проекта. (возможно создание для каждого terraform)
+- Для для переноса terraform.tfstate в облачное хранилище необходимо создать bucket (GCP -> Storage) и выполнить **teraform init**
+
 Для того чтобы посмотреть переменные шаблона используем команду:
 - $ packer inspect <путь_до_шаблона>
 Соберем образ для приложения, используя шаблон app.json.
