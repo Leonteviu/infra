@@ -95,6 +95,6 @@ xxx".
 Для возможности работы в важдом окружении необходимо выполнить terraform init.
 
 Используемые команды:
-   $ terraform plan
-   $ terraform apply
-   $ terraform destroy
+- $ terraform plan
+- $ terraform apply
+- $ terraform destroy
