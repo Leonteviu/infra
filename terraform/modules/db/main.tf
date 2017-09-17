@@ -26,12 +26,12 @@ resource "google_compute_firewall" "firewall_mongo" {
 
   allow {
     protocol = "tcp"
-    ports    = ["27017"]
+    ports    = "${var.firewall_mongo_port}"
   }
 
   # правило применимо к инстансам с тегом ...
-  target_tags = ["reddit-db"]
+  target_tags = "${var.target_tags}"
 
   # порт будет доступен только для инстансов с тегом ...
-  source_tags = ["reddit-app"]
+  source_tags = "${var.source_tags}"
 }
