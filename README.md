@@ -18,7 +18,7 @@ Create ubuntu16.json file include "provisioners" install Ruby & MongoDB (Commit 
   - source_image (required)
   - project_id (required)
 
-Use packer build -var-file=variables.json ubuntu16.json are packer build -var 'project_id=<My project_id>' -var 'source_image=ubuntu-1604-xenial-v20170815a' ubuntu16.json
+Use packer build -var-file=variables.json ubuntu16.json or packer build -var 'project_id=<My project_id>' -var 'source_image=ubuntu-1604-xenial-v20170815a' ubuntu16.json
 2. Add options to ubuntu16.json (Commit Add new options to ubintu16.json)
    - disk_size,
    - disk_type,
@@ -101,3 +101,42 @@ xxx".
 - $ terraform plan
 - $ terraform apply
 - $ terraform destroy
+
+# Homework 10 (branch homework_10)
+Цель: дополним provision в
+Packer, заменим bash скрипты Ansible
+плейбуками и будем двигаться в сторону
+конфигурации образа при помощи Ansible.
+
+- Для выполнения работ понадобится установленный **python 2.7**
+- Рекомендуется поставить пакетные менеджеры **easy_install** или **pip**
+- Установка **ansible** осуществляется:
+- easy_install `cat requirements.txt` или
+- pip install -r requirements.txt
+- $ ansible --version
+
+- ~/infra/ansible/requirements.txt - файл для установки ansible
+- ~/infra/ansible/reddit_app.yml - playbook установки ruby and rubygems для нашего приложения
+- ~/infra/ansible/reddir_db.yaml - playbook установки MongoDB для нашего приложения
+- ~/infra/ansible/app_with_ansible.json - шаблон для создания образа VM с установленной **ruby** и **bundler**
+- ~/infra/ansible/dd_with_ansible.json -  шаблон для создания образа  VM с установленной **MondoDB**
+- /infra/ansible/variables.json - файл с параметрами для создания VM
+
+Запустить выполнение playbook относительно созданного инстанса (инстанс можно создать произвольный):
+- ansible-playbook -u ubuntu -i <GCE_IP>, reddit_app.yml
+- ansible-playbook -u ubuntu -i <GCE_IP>, reddit_db.yml
+##### Не забываем сгенерировать пару ключей для пользователя ubuntu и поместить открытый ключ в метаданные GCP!
+
+#### Интегрируем Ansible в Packer 
+(Заменим секцию Provision в соответствующем образе .json на Ansible):
+
+##### для создания образов используем команды:
+-packer build -var-file=variables.json <имя_шаблона>.json или 
+- packer build -var 'project_id=<My project_id>' var 'source_image=<My_image_name>' <имя_шаблона>.json
+- Для проверки вместо build использовать validate
+
+##### Для проверки:
+На запущенных инстансах, созданных на основе наших образов, должны быть установлены ruby и bundle - для app инстанса и сервис mongodb - для инстанса db
+- $ ruby -v
+- $ bundler -v
+- $ systemctl status mongod
