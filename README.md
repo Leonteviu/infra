@@ -77,7 +77,6 @@
 - $ terraform output - посмотреть значение выходных переменных
 - $ terraform taint - позволяет пометить ресурс, который terraform должен пересоздать, при следующем запуске terraform appy. ($ terraform taint google_compute_instance.app)
 
-
 # Homework 9 (BRANCH TERRAFORM-2)
 ### (в этой конфигурации из-за того, что опущена настройка revisioner, после старта сервера приложения, само прилоежние у нас не доступно!)
 
@@ -135,7 +134,9 @@ xxx".
 - $ terraform apply
 - $ terraform destroy
 
+
 # Homework 10 (branch homework_10)
+
 Цель: дополним provision в
 Packer, заменим bash скрипты Ansible
 плейбуками и будем двигаться в сторону
