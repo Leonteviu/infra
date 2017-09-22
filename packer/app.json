@@ -2,7 +2,8 @@
     "variables": {
         "project_id": null,
         "source_image": null,
-        "machine_type": "f1-micro"
+        "machine_type": null,
+        "playbook_file_app": null
     },
     "builders": [
         {
@@ -23,7 +24,7 @@
     "provisioners": [
         {
             "type": "ansible",
-            "playbook_file": "reddit_app.yml"
+            "playbook_file": "{{user `playbook_file_app`}}"
         }
     ]
 }
