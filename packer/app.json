@@ -2,13 +2,14 @@
     "variables": {
         "project_id": null,
         "source_image": null,
-        "machine_type": "f1-micro"
+        "machine_type": null,
+        "playbook_file_app": null
     },
     "builders": [
         {
             "type": "googlecompute",
             "project_id": "{{user `project_id`}}",
-            "image_name": "reddit-app-base",
+            "image_name": "reddit-app-base-create-with-ansible",
             "source_image": "{{user `source_image`}}",
             "zone": "europe-west1-b",
             "ssh_username": "appuser",
@@ -21,9 +22,9 @@
         }
     ],
     "provisioners": [
-        {
-            "type": "shell",
-            "script": "scripts/install_ruby.sh"
+       {
+            "type": "ansible",
+            "playbook_file": "{{user `playbook_file_app`}}"
         }
     ]
 }

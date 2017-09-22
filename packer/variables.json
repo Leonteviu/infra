@@ -1,4 +1,7 @@
 {
 	"project_id": "infra-179710",
-	"source_image": "ubuntu-1604-xenial-v20170815a"
+	"source_image": "ubuntu-1604-xenial-v20170815a",
+	"machine_type": "f1-micro",
+	"playbook_file_app": "../ansible/packer_reddit_app.yml",
+	"playbook_file_db": "../ansible/packer_reddit_db.yml"
 }
