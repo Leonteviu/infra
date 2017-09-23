@@ -174,3 +174,31 @@ Packer, заменим bash скрипты Ansible
 - $ ruby -v
 - $ bundler -v
 - $ systemctl status mongod
+
+# Homework 11 (branch ansible-2)
+
+### Необходимо:
+- Для управления хостами при помощи Ansible на них также должен быть установлен Python 2.X
+
+
+- добавить в файл .gitignore следующую строку:
+- *.retry
+- Поднять инфрастурктуру, описанную в окружении stage (выполнить terraform apply в директории stage)
+
+- ~/infra/terraform/modules/db/outputs.tf - описаны выходные переменные для db хоста
+- ~/infra/ansible/hosts - инвентори файл (описаны хосты и группы хостов, которыми Ansible должен
+управлять. ansible_ssh_host=130.211.75.255 - адрес нашего севера приложения)
+- ~/infra/ansible/config.cfg - конфигурационный файл ansible (позволяет уменьшить количество информации в hosts)
+- ~/infra/ansible/reddit_app.yml - плайбук управления конфигурацией и деплоя нашего приложения.
+- ~/infra/ansible/templates/mongo.conf.j2 - параметризованный конфиг для MongoDB (расширение j2 будет напоминать нам, что данный файл является шаблоном)
+
+### Команды:
+- $ ansible appserver -i ./hosts -m ping - ping до appserver или
+- $ ansible app -m ping - если группа [app] описана в hosts
+- $ ansible dbserver -i ./hosts -m ping - ping до dbserver или
+- $ ansible db -m ping - если группа [db] описана в hosts
+- $ ansible all -m ping - проверить все группы, описанные в hosts
+- $ ansible dbserver -m command -a uptime - проверка времени работы инстанса
+__PLAYBOOKS__
+- $ ansible-playbook reddit_app.yml --check --limit db - Применение описания плейбука к хостам (--check - проводит "пробный прогон")
+- $ ansible-playbook reddit_app.yml --limit db - применить плайбук
