@@ -174,3 +174,54 @@ Packer, заменим bash скрипты Ansible
 - $ ruby -v
 - $ bundler -v
 - $ systemctl status mongod
+
+# Homework 11 (branch ansible-2)
+
+### Необходимо:
+- Для управления хостами при помощи Ansible на них также должен быть установлен Python 2.X
+- Поднять инфраструктуру, описанную в **stage**:
+- /home/leontev_iu/infra/ansible/packer_reddit_app.yml - переименовали reddit_app.yml
+- /home/leontev_iu/infra/ansible/packer_reddit_db.yml - переименовали reddit_adb.yml
+- ! **Важно**: 
+- Поправить шаблоны packer, указав правильные образы (/home/leontev_iu/infra/packer/variables.json):
+	|
+    - "playbook_file_app": "../ansible/packer_reddit_app.yml",
+	- "playbook_file_db": "../ansible/packer_reddit_db.yml"
+    |
+- /home/leontev_iu/infra/terraform/stage/variables.tf в этом файле указываем шаблоны, созданные в (Homework 10):
+    - reddit-app-base-create-with-ansible
+    - reddit-db-base-create-with-ansible
+    
+- $ cd ~/infta/terraform/stage
+- $ terraform apply
+
+
+- добавить в файл .gitignore следующую строку:
+- *.retry
+- Поднять инфрастурктуру, описанную в окружении stage (выполнить terraform apply в директории stage)
+
+- ~/infra/terraform/modules/db/outputs.tf - описаны выходные переменные для db хоста
+- ~/infra/ansible/hosts - инвентори файл (описаны хосты и группы хостов, которыми Ansible должен
+управлять)
+- ~/infra/ansible/config.cfg - конфигурационный файл ansible (позволяет уменьшить количество информации в hosts)
+- ~/infra/ansible/reddit_app.yml - плайбук управления конфигурацией и деплоя нашего приложения.
+- ~/infra/ansible/templates/mongo.conf.j2 - параметризованный конфиг для MongoDB (расширение j2 будет напоминать нам, что данный файл является шаблоном)
+- ~/infra/ansible/files/puma.service - файл для сервера Puma, чтобы иметь возможность управления сервером и добавлением его в автостарт.
+- ~/infra/ansible/tempates/db_conf.j2 - шаблон содержащий присвоение переменной DATABASE_URL значения,которое мы передаем через Ansible переменную db_host.
+
+### Команды:
+- $ ansible appserver -i ./hosts -m ping - ping до appserver или
+- $ ansible app -m ping - если группа [app] описана в hosts
+- $ ansible dbserver -i ./hosts -m ping - ping до dbserver или
+- $ ansible db -m ping - если группа [db] описана в hosts
+- $ ansible all -m ping - проверить все группы, описанные в hosts
+- $ ansible dbserver -m command -a uptime - проверка времени работы инстанса
+__Настройка инстанса БД__
+- $ ansible-playbook reddit_app.yml --check --limit db --tags db-tag - Применение описания плейбука к хостам (--check - проводит "пробный прогон")
+- $ ansible-playbook reddit_app.yml --limit db --tags db-tag - применим наши таски плейбука с тегом db-tag для группы хостов db
+__Настройка инстанса приложения__
+- $ ansible-playbook reddit_app.yml --check --limit app --tags app-tag - пробный прогон
+- $ ansible-playbook reddit_app.yml --limit app --tags app-tag - применим наши таски плейбука с тегом app-tag для группы хостов app
+__Деплой__
+- $ ansible-playbook reddit_app.yml --check --limit app --tags deploy-tag
+- $ ansible-playbook reddit_app.yml --limit app --tags deploy-tag
