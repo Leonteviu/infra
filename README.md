@@ -288,14 +288,16 @@
 
 # Homework 12 (branch ansible-3)
 
-## Файлы:
+- Ввели несколько плайбуков
+- Роли
+
+  ## Файлы:
 
 - ~/infra/ansible/reddit_app2.yml - файл с множественными сценариями (мы его переименовали в последствии в reddit_app_multiple_plays.yml)
 
 - ~/infra/ansible/db.yml - файл со сценарием настройки БД;
 
 - ~/infra/ansible/app.yml - файл со сценарием настройки приложения;
-
 - ~/infra/ansible/deploy.yml - файл со сценарием деплоя приложения
 - _(в файлах убраны tags)_
 - ~/infra/ansible/site.yml - в файле описано управление конфигурацией всей нашей инфраструктуры (включает имена файлов db.yml, app.yml, deploy.yml)
