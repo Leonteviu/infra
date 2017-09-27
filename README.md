@@ -288,28 +288,79 @@
 
 # Homework 12 (branch ansible-3)
 
-- Ввели несколько плайбуков
-- Роли
+## **Множественные сценарии**
 
-  ## Файлы:
+### Файлы:
 
 - ~/infra/ansible/reddit_app2.yml - файл с множественными сценариями (мы его переименовали в последствии в reddit_app_multiple_plays.yml)
 
-- ~/infra/ansible/db.yml - файл со сценарием настройки БД;
-
-- ~/infra/ansible/app.yml - файл со сценарием настройки приложения;
-- ~/infra/ansible/deploy.yml - файл со сценарием деплоя приложения
-- _(в файлах убраны tags)_
-- ~/infra/ansible/site.yml - в файле описано управление конфигурацией всей нашей инфраструктуры (включает имена файлов db.yml, app.yml, deploy.yml)
-
-## Команды:
+### Команды:
 
 - $ ansible-playbook reddit_app2.yml --tags db-tag
 - $ ansible-playbook reddit_app2.yml --tags app-tag
 - $ ansible-playbook reddit_app2.yml --tags deploy-tag-tag
-- $ ansible-playbook site.yml
+
+## **Ввели несколько плайбуков**
+
+### Файлы:
 
 **Переименовали наши предыдущие плейбуки:**
 
 - изменили название файла reddit_app.yml на reddit_app_one_play.yml,
 - изменили название файла reddit_app2.yml на reddit_app_multiple_plays.yml.
+
+- ~/infra/ansible/db.yml - файл со сценарием настройки БД;
+
+- ~/infra/ansible/app.yml - файл со сценарием настройки приложения;
+
+- ~/infra/ansible/deploy.yml - файл со сценарием деплоя приложения
+
+- _(в файлах убраны tags)_
+
+- ~/infra/ansible/site.yml - в файле описано управление конфигурацией всей нашей инфраструктуры (включает имена файлов db.yml, app.yml, deploy.yml)
+
+### Команды:
+
+- $ terraform destroy
+- $ terraform apply -auto-approve=false
+- $ ansible-playbook site.yml
+
+## **Роли**
+
+### Файлы:
+
+- Особенностью ролей также является, что модули для модулей **template** и **copy**, которые используются в тасках роли, Ansible будет по умолчанию проверять наличие шаблонов и файлов в директориях роли **templates** и **files** соответсвенно.
+- ~/infra/ansible/roles (команды по созданию заготовок ролей выполняются в этой директории)
+- ~/infra/ansible/roles/db/tasks/main.yml - файл для tasks роли db
+- ~/infra/ansble/roles/db/templates - директория для шаблонов (скопируем туда шаблонизированный конфиг для MongoDB из директории ~/infra/ansible/templates)
+- ~/infra/ansible/roles/db/handlers/main.yml - файл определяет используемый хендлер
+- ~/infra/ansible/roles/db/defaults/main.yml - используемые в шаблоне переменные по умолчанию
+- ~/infra/ansible/roles/app/tasks/main.yml - файл для tasks роли app (Не забудем при этом заменить src в модулях copy и template для указания только имени файлов.)
+- ~/infra/ansible/roles/app/templates - директория для шаблонов
+- ~/infra/ansible/roles/app/files - директория для файлов
+- ~/infra/ansible/roles/app/handlers/main.yml - используемый хэдлер
+- ~/infra/ansible/roles/app/defaults/main.yml - файл с переменной по умолчанию для задания адреса подключения к MongoDB
+
+- В файлах (~/infra/ansible/app.yml и ~/infra/ansible/db.yml) добавили **roles:**
+
+### Команды:
+
+- $ ansible-galaxy -h
+- $ ansible-galaxy init app - создание заготовки роли для конфигурации нашего приложения
+- $ ansible-galaxy init db - создание заготовки роли для конфигурации БД
+- $ tree db
+- $ tree app
+
+#### для проверки пересоздадим инфраструктуру окружения **stage**:
+
+- $ terraform destroy
+
+- $ terraform apply -auto-approve=false
+
+- $ ansible-playbook site.yml
+
+## **Окружения**
+
+### Файлы:
+
+### Команды:
