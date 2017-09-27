@@ -288,10 +288,26 @@
 
 # Homework 12 (branch ansible-3)
 
-- ~/infra/ansible/reddit_app2.yml - файл с множественными сценариями
+## Файлы:
+
+- ~/infra/ansible/reddit_app2.yml - файл с множественными сценариями (мы его переименовали в последствии в reddit_app_multiple_plays.yml)
+
+- ~/infra/ansible/db.yml - файл со сценарием настройки БД;
+
+- ~/infra/ansible/app.yml - файл со сценарием настройки приложения;
+
+- ~/infra/ansible/deploy.yml - файл со сценарием деплоя приложения
+- _(в файлах убраны tags)_
+- ~/infra/ansible/site.yml - в файле описано управление конфигурацией всей нашей инфраструктуры (включает имена файлов db.yml, app.yml, deploy.yml)
 
 ## Команды:
 
 - $ ansible-playbook reddit_app2.yml --tags db-tag
 - $ ansible-playbook reddit_app2.yml --tags app-tag
 - $ ansible-playbook reddit_app2.yml --tags deploy-tag-tag
+- $ ansible-playbook site.yml
+
+**Переименовали наши предыдущие плейбуки:**
+
+- изменили название файла reddit_app.yml на reddit_app_one_play.yml,
+- изменили название файла reddit_app2.yml на reddit_app_multiple_plays.yml.
