@@ -381,12 +381,6 @@
 - ~/infra/ansible/environments/prod/group_vars/app - определение переменных для группы хостов app
 - ~/infra/ansible/environments/prod/group_vars/db - определение переменных для группы хостов db
 - ~/infra/ansible/environments/prod/group_vars/all - переменная, которая имеет все хосты окружения
-- ~/infra/
-- ~/infra/
-- ~/infra/
-- ~/infra/
-- ~/infra/
-- ~/infra/
 - **env** - переменная по-умолчанию в используемых ролях (ansible/roles/app/defaults/main.yml и ansible/roles/db/defaults/main.yml)
 - **debug** - модуль выводит значение переменной, на каком окружении находится конфигурируемый хост(ansible/roles/app/tasks/main.yml и ansible/roles/db/tasks/main.yml).
 
@@ -397,3 +391,9 @@
 - $ terraform apply -auto-approve=false
 - не забудьте изменить внешние IP адреса инстансов в инвентори файле ansible/environments/stage/hosts и переменную db_host в stage/group_vars/app
 - $ ansible-playbook site.yml
+- **prod**
+- $ terraform destroy
+- $ terraform apply -auto-approve=false
+- не забудьте изменить внешние IP адреса инстансов в инвентори файле ansible/environments/prod/hosts и переменную db_host в prod/group_vars/app
+- $ ansible-playbook -i environments/prod/hosts site.yml --check
+- $ ansible-playbook -i environments/prod/hosts site.yml
