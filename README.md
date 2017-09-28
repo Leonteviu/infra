@@ -397,3 +397,46 @@
 - не забудьте изменить внешние IP адреса инстансов в инвентори файле ansible/environments/prod/hosts и переменную db_host в prod/group_vars/app
 - $ ansible-playbook -i environments/prod/hosts site.yml --check
 - $ ansible-playbook -i environments/prod/hosts site.yml
+
+# Homework 13 (branch ansible-4)
+
+# План:
+
+- Локальная разработка при помощи Vagrant
+- Тестирование ролей при помощи Molecule и Testinfra
+- Подключение Travis CI для автоматического прогона тестов
+
+## Локальная разработка при помощи Vagrant:
+
+**Необходимо**
+
+- Установить VirtualBox на локальную машину
+- Установить Vagrant:
+
+  - $ sudo dpkg -i FileName.deb
+  - $ t-get install -f
+  - $ vagrant -v
+
+- Добавим в .gitignore:
+
+  - .vagrant/
+  - _*.logs_
+  - _*.log_
+
+### Файлы:
+
+- ~/infra/ansible/Vagrantfile - содержит описание характеристик VMs (**dbserver** и **appserver**), которые хотим создать.
+
+### Команды:
+
+- $ vagrant up - создание виртуалок, описанных в Vagrantfile
+
+- $ vagrant box list - проверим, что бокс скачался на нашу локальную машину
+
+- $ vagrant status - проверить статус VMs
+
+- $ vagrant ssh appserver - проверить SSH доступ к VM
+
+## Доработка ролей
+
+**db роль**
