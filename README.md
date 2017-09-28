@@ -492,7 +492,11 @@
 - $ virtualenv infra
 
 - pip install --user virtualenvwrapper
+
 - sudo pip install -r requirements.txt - установим все необходимые компоненты для тестирования: Molecule, Ansible, Testinfra на локальную машину используя pip (ansible < 2.4, т.к. наблюдались проблемы при работе с molecule у последней версии ansible)
+
+**тесты для роли db:**
+
 - molecule init scenario --scenario-name default -r db -d vagrant - создание заготовки тестов для роли db (выполнить в ansible/roles/db)
 
 ### Файлы:
@@ -505,3 +509,12 @@
 - $ molecule create - создание VM для проверки роли (выполнить в ansible/roles/db)
 - $ molecule list - посмотреть список созданных инстансов, которыми управляет Molecule
 - $ molecule login -h instance - при необходимости дебага подключиться по SSH внутрь VM
+
+#### playbook.yml
+
+- Для применения роли нам необходимо вызвать нашу роль в плейбуке и указать в этом плейбуке к каким хостам применять данную конфигурацию
+- db/molecule/default/playbook.yml - содержит два сценария: один для установки python 2.X, а второй для применения нашей роли (таски нашей роли требуют выполнения из-под суперпользователя - добавили become: true и vars:)
+
+- $ molecule converge - применить playbook.yml, в котором вызывается наша роль к созданному хосту
+
+- $ molecule verify - прогнать тесты
