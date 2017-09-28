@@ -476,3 +476,32 @@
 - $ vagrant provision appserver - запуск провижинера
 - $ vagrant ssh appserver - проверка доступности SSH порта
 - $ vagrant destroy -f - удаление машины
+
+## Тестирование ролей при помощи Molecule и Testinfra
+
+**Необходимо:**
+
+- установим все необходимые компоненты для тестирования: Molecule, Ansible, Testinfra на локальную машину используя pip. Установку данных модулей рекомендуется выполнять в созданной через virtualenv среде работы с питоном. Инструкции по установке virtualenv и virtualenvwrapper можно посмотреть (<http://docs.python-guide.org/en/latest/dev/virtualenvs/>)
+
+- pip install virtualenv
+
+- mkdir ~/Envs
+
+- cd ~/Envs
+
+- $ virtualenv infra
+
+- pip install --user virtualenvwrapper
+- sudo pip install -r requirements.txt - установим все необходимые компоненты для тестирования: Molecule, Ansible, Testinfra на локальную машину используя pip (ansible < 2.4, т.к. наблюдались проблемы при работе с molecule у последней версии ansible)
+- molecule init scenario --scenario-name default -r db -d vagrant - создание заготовки тестов для роли db (выполнить в ansible/roles/db)
+
+### Файлы:
+
+- db/molecule/default/tests/test_default.py - несколько тестов, используя модули Testinfra, для проверки конфигурации, настраиваемой ролью db
+- db/molecule/default/molecule.yml - Описание тестовой машины, которая создается Molecule для тестов (по-умолчанию используется нужный нам box)
+
+### Команды:
+
+- $ molecule create - создание VM для проверки роли (выполнить в ansible/roles/db)
+- $ molecule list - посмотреть список созданных инстансов, которыми управляет Molecule
+- $ molecule login -h instance - при необходимости дебага подключиться по SSH внутрь VM
