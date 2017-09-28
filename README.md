@@ -453,4 +453,23 @@
 ### Команды:
 
 - $ vagrant provision dbserver - запуск провижинера
+- $ vagrant ssh dbserver - проверка доступности SSH порта
+
+**app роль**
+
+### Файлы:
+
+- ~/infra/ansible/Vagrantfile - содержит првижинг воспределения хостов **dbserver** и **appserver**
+- ~/infra/ansible/app.yml - содержит **pre_tasks** для установки необходимой для работы ansible версии Python
+- ~/infra/ansible/roles/app/tasks/ruby.yml - файл тасков для установки Ruby (tags: ruby) (вынесен в отдельный файл из файла packer_reddit_app.yml)
+- ~/infra/ansible/roles/app/tasks/puma.yml - файл тасков для настройки Puma (вынесен в отдельный файл из файла app/tasks/main.yml)
+- ~/infra/ansible/roles/app/tasks/main.yml - теперь содержит вызываемые таски
+- параметризация конфигурации, для возможности использовать ее для пользователя другого, чем appuser:
+- ~/infra/ansible/roles/app/defaults/main.yml - определяет переменную **deploy_user** по-умолчанию
+- ~/infra/ansible/roles/app/tasks/puma.yml - параметризованный файл (используется переменная deploy_user)
+- ~/infra/ansible/roles/app/templates/puma.service.j2 - параметризованный файл (перенесен из файла app/files/puma.service) (используется переменная deploy_user)
+
+### Команды:
+
+- $ vagrant provision appserver - запуск провижинера
 - $ vagrant ssh appserver - проверка доступности SSH порта
