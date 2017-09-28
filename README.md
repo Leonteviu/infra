@@ -468,8 +468,11 @@
 - ~/infra/ansible/roles/app/defaults/main.yml - определяет переменную **deploy_user** по-умолчанию
 - ~/infra/ansible/roles/app/tasks/puma.yml - параметризованный файл (используется переменная deploy_user)
 - ~/infra/ansible/roles/app/templates/puma.service.j2 - параметризованный файл (перенесен из файла app/files/puma.service) (используется переменная deploy_user)
+- ~/infra/ansible/deploy.yml - параметризованный (deploy_user) файл для диплоя
+- ~/infra/ansible/Vagrantfile - также содержит **extra_vars** для переопределения дефолтного значение переменной пользователя на имя пользователя используемое нашим боксом по умолчанию, т.е. ubuntu
 
 ### Команды:
 
 - $ vagrant provision appserver - запуск провижинера
 - $ vagrant ssh appserver - проверка доступности SSH порта
+- $ vagrant destroy -f - удаление машины
