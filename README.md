@@ -440,3 +440,17 @@
 ## Доработка ролей
 
 **db роль**
+
+### Файлы:
+
+- ~/infra/ansible/Vagrantfile - содержит првижинг воспределения хостов **dbserver** и **appserver**
+- ~/infra/ansible/db.yml - содержит **pre_tasks** для установки необходимой для работы ansible версии Python
+- ~/infra/ansible/app.yml - содержит **pre_tasks** для установки необходимой для работы ansible версии Python
+- ~/infra/ansible/roles/db/tasks/install_mongo.yml - файл тасков для установки MongoDB (tags: install) (вынесен в отдельный файл из файла packer_reddit_db.yml)
+- ~/infra/ansible/roles/db/tasks/config_mongo.yml - файл с тасками управления конфигом mongo
+- ~/infra/ansible/roles/db/tasks/main.yml - теперь содержит вызываемые таски
+
+### Команды:
+
+- $ vagrant provision dbserver - запуск провижинера
+- $ vagrant ssh appserver - проверка доступности SSH порта
