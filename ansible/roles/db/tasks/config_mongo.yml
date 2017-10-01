@@ -4,4 +4,5 @@
     src: templates/mongod.conf.j2
     dest: /etc/mongod.conf
     mode: 0644
+  tags: configure
   notify: restart mongod

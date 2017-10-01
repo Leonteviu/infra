@@ -222,7 +222,7 @@
 - Для управления хостами при помощи Ansible на них также должен быть установлен Python 2.X
 - Поднять инфраструктуру, описанную в **stage**:
 - /home/leontev_iu/infra/ansible/packer_reddit_app.yml - переименовали reddit_app.yml
-- /home/leontev_iu/infra/ansible/packer_reddit_db.yml - переименовали reddit_adb.yml
+- /home/leontev_iu/infra/ansible/packer_reddit_db.yml - переименовали reddit_db.yml
 - ! **Важно**:
 - Поправить шаблоны packer, указав правильные образы (/home/leontev_iu/infra/packer/variables.json):
 
@@ -518,3 +518,45 @@
 - $ molecule converge - применить playbook.yml, в котором вызывается наша роль к созданному хосту
 
 - $ molecule verify - прогнать тесты
+
+### Настройка для использования tags:
+
+Поднимем окружение **stage**
+
+- в директории ~/infra/terraform/stage выполним:
+- terraform apply
+- не забудем указать IP для app и db (в ~/infra/terraform/stage/hosts)
+- проверим в ~/ansible/environments/stage/group_vars/app значение переменной db_host
+
+- добавим соответствующие **tags** в файлы тасков в ролях:
+
+  - app:
+
+    - tags:puma (~/ansible/roles/app/tasks/puma.yml)
+    - tags:ruby (~/ansible/roles/app/tasks/ruby.yml)
+    - tags:deploy (~/ansible/roles/app/tasks/deploy_app.yml)
+
+  - db:
+
+    - tags: install (~/ansible/roles/db/tasks/install_mongo.yml)
+    - tags: configure (~/ansible/roles/db/tasks/config_mongo.yml)
+
+#### Файлы:
+
+- ansible/roles/app/tasks/deploy_app.yml - таски для деплоя нашего приложения (создан на основе ~/ansible/deploy.yml, хэндлер вынесен в ~/ansible/roles/app/handlers/main.yml)
+
+#### Команды (выполняются в директории ~/infra/ansible):
+
+- $ ansible-playbook site.yml --tags install
+- $ ansible-playbook site.yml --tags configure
+- $ ansible-playbook site.yml --tags puma
+- $ ansible-playbook site.yml --tags ruby
+- $ ansible-playbook site.yml --tags deploy
+
+либо одной командой:
+
+- $ ansible-playbook site.yml
+
+Проверить работу можно, введя в строку адреса браузера:
+
+- app_external_ip:9292

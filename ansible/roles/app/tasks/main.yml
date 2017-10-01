@@ -7,3 +7,4 @@
 
 - include: ruby.yml
 - include: puma.yml
+- include: deploy_app.yml
