@@ -147,7 +147,7 @@
 - ~/infra/terraform/prod # окружение prod
 - ~/infra/terraform/stage # окружение stage
 
-Каждая директория содержит файлы main.tf, variables.tf, outputs.tf, terraform.tfvars, скопированные из директории terraform. Заменены пути к модулям в main.tf на "../modules/xxx" вместо "modules/ xxx".
+Каждая директория содержит файлы main.tf, variables.tf, outputs.tf, terraform.tfvars, скопированные из директории terraform. Заменены пути к модулям в main.tf на "../modules/xxx" вместо "modules/xxx".
 
 Инфраструктура в обоих окружениях идентична. Однако в prod открыт SSH доступ только с моего IP (myip.ru - можно узнать свой IP), в stage открыт SSH доступ для всех IP.
 
@@ -560,3 +560,25 @@
 Проверить работу можно, введя в строку адреса браузера:
 
 - app_external_ip:9292
+
+### Создадим образа VM при помощи packer, используя плайбуки содержащие роли (в итоге получим образ для app VM с установленным Ruby и образ для db VM с установленным MongoDB):
+
+- "extra_arguments": ["--tags=ruby"]
+
+#### Файлы:
+
+- файлы содержать **extra_arguments**, чтобы передавать теги в пакер:
+- ~/infra/packer/app.json -
+- ~/infra/packer/db.json -
+- Содержат вызываемые роли вместо описания тасков:
+- ansible/packer_reddit_app.yml
+- ansible/packer_reddit_db.yml
+- Поменял имена создаваемых образов:
+- terraform/prod/variables.tf
+- terraform/stage/variables.tf
+
+#### Команды:
+
+- $ packer build -var-file=variables.json db.json
+- $ packer build -var-file=variables.json app.json
+- $ terraform apply (выполняется в для нужного окружения - stage или prod)

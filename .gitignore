@@ -10,3 +10,5 @@
 .vagrant/
 *.logs
 *.log
+*.pyc
+*.pem
