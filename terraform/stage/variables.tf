@@ -21,12 +21,12 @@ variable private_key {
 
 variable app_disk_image {
   description = "Disk image for reddit app"
-  default     = "reddit-app-base-create-with-ansible"
+  default     = "reddit-app-base-create-with-ansible-role"
 }
 
 variable db_disk_image {
   description = "Disk image for reddit db"
-  default     = "reddit-db-base-create-with-ansible"
+  default     = "reddit-db-base-create-with-ansible-role"
 }
 
 variable source_ranges {

@@ -3,3 +3,6 @@
 
 - name: reload puma
   systemd: name=puma state=reloaded
+
+- name: restart puma
+  systemd: name=puma state=restarted

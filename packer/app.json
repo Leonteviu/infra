@@ -9,14 +9,14 @@
         {
             "type": "googlecompute",
             "project_id": "{{user `project_id`}}",
-            "image_name": "reddit-app-base-create-with-ansible",
+            "image_name": "reddit-app-base-create-with-ansible-role",
             "source_image": "{{user `source_image`}}",
             "zone": "europe-west1-b",
             "ssh_username": "appuser",
             "machine_type": "{{user `machine_type`}}",
             "disk_size": "50",
             "disk_type": "pd-ssd",
-            "image_description": "VM with Ruby & MongoDB",
+            "image_description": "VM with Ruby",
             "network": "default",
             "tags": "puma-server"
         }
@@ -24,7 +24,8 @@
     "provisioners": [
        {
             "type": "ansible",
-            "playbook_file": "{{user `playbook_file_app`}}"
+            "playbook_file": "{{user `playbook_file_app`}}",
+            "extra_arguments": ["--tags=ruby"]
         }
     ]
 }

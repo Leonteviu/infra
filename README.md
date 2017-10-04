@@ -147,7 +147,7 @@
 - ~/infra/terraform/prod # окружение prod
 - ~/infra/terraform/stage # окружение stage
 
-Каждая директория содержит файлы main.tf, variables.tf, outputs.tf, terraform.tfvars, скопированные из директории terraform. Заменены пути к модулям в main.tf на "../modules/xxx" вместо "modules/ xxx".
+Каждая директория содержит файлы main.tf, variables.tf, outputs.tf, terraform.tfvars, скопированные из директории terraform. Заменены пути к модулям в main.tf на "../modules/xxx" вместо "modules/xxx".
 
 Инфраструктура в обоих окружениях идентична. Однако в prod открыт SSH доступ только с моего IP (myip.ru - можно узнать свой IP), в stage открыт SSH доступ для всех IP.
 
@@ -222,7 +222,7 @@
 - Для управления хостами при помощи Ansible на них также должен быть установлен Python 2.X
 - Поднять инфраструктуру, описанную в **stage**:
 - /home/leontev_iu/infra/ansible/packer_reddit_app.yml - переименовали reddit_app.yml
-- /home/leontev_iu/infra/ansible/packer_reddit_db.yml - переименовали reddit_adb.yml
+- /home/leontev_iu/infra/ansible/packer_reddit_db.yml - переименовали reddit_db.yml
 - ! **Важно**:
 - Поправить шаблоны packer, указав правильные образы (/home/leontev_iu/infra/packer/variables.json):
 
@@ -397,3 +397,188 @@
 - не забудьте изменить внешние IP адреса инстансов в инвентори файле ansible/environments/prod/hosts и переменную db_host в prod/group_vars/app
 - $ ansible-playbook -i environments/prod/hosts site.yml --check
 - $ ansible-playbook -i environments/prod/hosts site.yml
+
+# Homework 13 (branch ansible-4)
+
+# План:
+
+- Локальная разработка при помощи Vagrant
+- Тестирование ролей при помощи Molecule и Testinfra
+- Подключение Travis CI для автоматического прогона тестов
+
+## Локальная разработка при помощи Vagrant:
+
+**Необходимо**
+
+- Установить VirtualBox на локальную машину
+- Установить Vagrant:
+
+  - $ sudo dpkg -i FileName.deb
+  - $ t-get install -f
+  - $ vagrant -v
+
+- Добавим в .gitignore:
+
+  - .vagrant/
+  - _*.logs_
+  - _*.log_
+
+### Файлы:
+
+- ~/infra/ansible/Vagrantfile - содержит описание характеристик VMs (**dbserver** и **appserver**), которые хотим создать.
+
+### Команды:
+
+- $ vagrant up - создание виртуалок, описанных в Vagrantfile
+
+- $ vagrant box list - проверим, что бокс скачался на нашу локальную машину
+
+- $ vagrant status - проверить статус VMs
+
+- $ vagrant ssh appserver - проверить SSH доступ к VM
+
+## Доработка ролей
+
+**db роль**
+
+### Файлы:
+
+- ~/infra/ansible/Vagrantfile - содержит првижинг воспределения хостов **dbserver** и **appserver**
+- ~/infra/ansible/db.yml - содержит **pre_tasks** для установки необходимой для работы ansible версии Python
+- ~/infra/ansible/app.yml - содержит **pre_tasks** для установки необходимой для работы ansible версии Python
+- ~/infra/ansible/roles/db/tasks/install_mongo.yml - файл тасков для установки MongoDB (tags: install) (вынесен в отдельный файл из файла packer_reddit_db.yml)
+- ~/infra/ansible/roles/db/tasks/config_mongo.yml - файл с тасками управления конфигом mongo
+- ~/infra/ansible/roles/db/tasks/main.yml - теперь содержит вызываемые таски
+
+### Команды:
+
+- $ vagrant provision dbserver - запуск провижинера
+- $ vagrant ssh dbserver - проверка доступности SSH порта
+
+**app роль**
+
+### Файлы:
+
+- ~/infra/ansible/Vagrantfile - содержит првижинг воспределения хостов **dbserver** и **appserver**
+- ~/infra/ansible/app.yml - содержит **pre_tasks** для установки необходимой для работы ansible версии Python
+- ~/infra/ansible/roles/app/tasks/ruby.yml - файл тасков для установки Ruby (tags: ruby) (вынесен в отдельный файл из файла packer_reddit_app.yml)
+- ~/infra/ansible/roles/app/tasks/puma.yml - файл тасков для настройки Puma (вынесен в отдельный файл из файла app/tasks/main.yml)
+- ~/infra/ansible/roles/app/tasks/main.yml - теперь содержит вызываемые таски
+- параметризация конфигурации, для возможности использовать ее для пользователя другого, чем appuser:
+- ~/infra/ansible/roles/app/defaults/main.yml - определяет переменную **deploy_user** по-умолчанию
+- ~/infra/ansible/roles/app/tasks/puma.yml - параметризованный файл (используется переменная deploy_user)
+- ~/infra/ansible/roles/app/templates/puma.service.j2 - параметризованный файл (перенесен из файла app/files/puma.service) (используется переменная deploy_user)
+- ~/infra/ansible/deploy.yml - параметризованный (deploy_user) файл для диплоя
+- ~/infra/ansible/Vagrantfile - также содержит **extra_vars** для переопределения дефолтного значение переменной пользователя на имя пользователя используемое нашим боксом по умолчанию, т.е. ubuntu
+
+### Команды:
+
+- $ vagrant provision appserver - запуск провижинера
+- $ vagrant ssh appserver - проверка доступности SSH порта
+- $ vagrant destroy -f - удаление машины
+
+## Тестирование ролей при помощи Molecule и Testinfra
+
+**Необходимо:**
+
+- установим все необходимые компоненты для тестирования: Molecule, Ansible, Testinfra на локальную машину используя pip. Установку данных модулей рекомендуется выполнять в созданной через virtualenv среде работы с питоном. Инструкции по установке virtualenv и virtualenvwrapper можно посмотреть (<http://docs.python-guide.org/en/latest/dev/virtualenvs/>)
+
+- pip install virtualenv
+
+- mkdir ~/Envs
+
+- cd ~/Envs
+
+- $ virtualenv infra
+
+- pip install --user virtualenvwrapper
+
+- sudo pip install -r requirements.txt - установим все необходимые компоненты для тестирования: Molecule, Ansible, Testinfra на локальную машину используя pip (ansible < 2.4, т.к. наблюдались проблемы при работе с molecule у последней версии ansible)
+
+**тесты для роли db:**
+
+- molecule init scenario --scenario-name default -r db -d vagrant - создание заготовки тестов для роли db (выполнить в ansible/roles/db)
+
+### Файлы:
+
+- db/molecule/default/tests/test_default.py - несколько тестов, используя модули Testinfra, для проверки конфигурации, настраиваемой ролью db
+- db/molecule/default/molecule.yml - Описание тестовой машины, которая создается Molecule для тестов (по-умолчанию используется нужный нам box)
+
+### Команды:
+
+- $ molecule create - создание VM для проверки роли (выполнить в ansible/roles/db)
+- $ molecule list - посмотреть список созданных инстансов, которыми управляет Molecule
+- $ molecule login -h instance - при необходимости дебага подключиться по SSH внутрь VM
+
+#### playbook.yml
+
+- Для применения роли нам необходимо вызвать нашу роль в плейбуке и указать в этом плейбуке к каким хостам применять данную конфигурацию
+- db/molecule/default/playbook.yml - содержит два сценария: один для установки python 2.X, а второй для применения нашей роли (таски нашей роли требуют выполнения из-под суперпользователя - добавили become: true и vars:)
+
+- $ molecule converge - применить playbook.yml, в котором вызывается наша роль к созданному хосту
+
+- $ molecule verify - прогнать тесты
+
+### Настройка для использования tags:
+
+Поднимем окружение **stage**
+
+- в директории ~/infra/terraform/stage выполним:
+- terraform apply
+- не забудем указать IP для app и db (в ~/infra/terraform/stage/hosts)
+- проверим в ~/ansible/environments/stage/group_vars/app значение переменной db_host
+
+- добавим соответствующие **tags** в файлы тасков в ролях:
+
+  - app:
+
+    - tags:puma (~/ansible/roles/app/tasks/puma.yml)
+    - tags:ruby (~/ansible/roles/app/tasks/ruby.yml)
+    - tags:deploy (~/ansible/roles/app/tasks/deploy_app.yml)
+
+  - db:
+
+    - tags: install (~/ansible/roles/db/tasks/install_mongo.yml)
+    - tags: configure (~/ansible/roles/db/tasks/config_mongo.yml)
+
+#### Файлы:
+
+- ansible/roles/app/tasks/deploy_app.yml - таски для деплоя нашего приложения (создан на основе ~/ansible/deploy.yml, хэндлер вынесен в ~/ansible/roles/app/handlers/main.yml)
+
+#### Команды (выполняются в директории ~/infra/ansible):
+
+- $ ansible-playbook site.yml --tags install
+- $ ansible-playbook site.yml --tags configure
+- $ ansible-playbook site.yml --tags puma
+- $ ansible-playbook site.yml --tags ruby
+- $ ansible-playbook site.yml --tags deploy
+
+либо одной командой:
+
+- $ ansible-playbook site.yml
+
+Проверить работу можно, введя в строку адреса браузера:
+
+- app_external_ip:9292
+
+### Создадим образа VM при помощи packer, используя плайбуки содержащие роли (в итоге получим образ для app VM с установленным Ruby и образ для db VM с установленным MongoDB):
+
+- "extra_arguments": ["--tags=ruby"]
+
+#### Файлы:
+
+- файлы содержать **extra_arguments**, чтобы передавать теги в пакер:
+- ~/infra/packer/app.json -
+- ~/infra/packer/db.json -
+- Содержат вызываемые роли вместо описания тасков:
+- ansible/packer_reddit_app.yml
+- ansible/packer_reddit_db.yml
+- Поменял имена создаваемых образов:
+- terraform/prod/variables.tf
+- terraform/stage/variables.tf
+
+#### Команды:
+
+- $ packer build -var-file=variables.json db.json
+- $ packer build -var-file=variables.json app.json
+- $ terraform apply (выполняется в для нужного окружения - stage или prod)

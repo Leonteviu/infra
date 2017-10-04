@@ -1,0 +1,4 @@
+{
+  "tests/test_default.py::test_port": true, 
+  "tests/test_default.py::test_port[ansible://instance]": true
+}
